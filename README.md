@@ -12,5 +12,18 @@ Navigate to the project folder
 ```bash
 dotnet add package Microsoft.EntityFrameworkCore.SqlServer
 dotnet add package Microsoft.EntityFrameworkCore.Tools
-# AAq needed? dotnet add package Microsoft.EntityFrameworkCore.Design
+```
+
+## Create Database
+```bash
+Add-Migration Initial
+Update-database
+``` 
+
+## Drop DB
+Delete Migrations folder
+then:
+```bash
+Drop-Database
+Drop-Database -Force
 ```

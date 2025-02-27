@@ -1,7 +1,11 @@
 ﻿using CSharpNet8Login.Entities;
 using CSharpNet8Login.Models;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace CSharpNet8Login.Controllers
 {
@@ -16,7 +20,7 @@ namespace CSharpNet8Login.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            return View(_context.UserAccounts.ToList());
         }
 
         public IActionResult Registration()
@@ -75,11 +79,29 @@ namespace CSharpNet8Login.Controllers
 
                 if (user != null)
                 {
-                    return RedirectToAction("Index");
+                    // Create cookie
+                    var claims = new List<Claim>
+                    {
+                        new Claim(ClaimTypes.Name, user.Email),
+                        new Claim("Name", user.FirstName),
+                        new Claim(ClaimTypes.Role, "User"),
+                    };
+
+                    var claimsIdentity = new ClaimsIdentity(
+                                            claims, 
+                                            CookieAuthenticationDefaults.AuthenticationScheme);
+
+                    HttpContext.SignInAsync(
+                        CookieAuthenticationDefaults.AuthenticationScheme,
+                        new ClaimsPrincipal(claimsIdentity)
+                    );
+
+                    return RedirectToAction("SecurePage");
                 }
                 else
                 {
-                    ModelState.AddModelError("", "Invalid email or password"); // AA1 does this message require imrpovements?
+                    // AA1 does this message require imrpovements?
+                    ModelState.AddModelError("", "Invalid email or password");
                 }
 
                 ModelState.AddModelError("", "Invalid email or password");
@@ -87,9 +109,16 @@ namespace CSharpNet8Login.Controllers
             return View(model);
         }
 
+        public IActionResult Logout()
+        {
+            HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return RedirectToAction("Login");
+        }
+
+        [Authorize]
         public IActionResult SecurePage()
         {
-            //return RedirectToAction("Login");
+            ViewBag.Name = HttpContext.User.Identity.Name;
             return View();
         }
     }

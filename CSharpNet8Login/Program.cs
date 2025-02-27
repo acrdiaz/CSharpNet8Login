@@ -1,4 +1,5 @@
 using CSharpNet8Login.Entities;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +11,13 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+//builder.Services.AddAuthentication("CookieAuth")
+//    .AddCookie("CookieAuth", config =>
+//    {
+//        config.Cookie.Name = "Grandmas.Cookie";
+//        config.LoginPath = "/Home/Authenticate";
+//    });
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
 
 var app = builder.Build();
 

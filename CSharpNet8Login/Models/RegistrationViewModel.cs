@@ -18,8 +18,8 @@ namespace CSharpNet8Login.Models
         [Required(ErrorMessage = "Email is required.")]
         [MaxLength(100, ErrorMessage = "Max. 100 characters allowed.")]
         [DataType(DataType.EmailAddress)]
-        [EmailAddress(ErrorMessage = "Invalid email address.")]
-        //[RegularExpression(@"^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$", ErrorMessage = "Please Enter Valid Email.")]
+        //[EmailAddress(ErrorMessage = "Invalid email address.")]
+        [RegularExpression(@"^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$", ErrorMessage = "Please Enter Valid Email.")]
         public string Email { get; set; }
 
         [Required(ErrorMessage = "Username is required.")]
